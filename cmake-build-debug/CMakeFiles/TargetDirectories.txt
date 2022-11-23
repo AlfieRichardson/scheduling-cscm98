@@ -1,0 +1,3 @@
+/home/alfie/git-repos/scheduling-cscm98/cmake-build-debug/CMakeFiles/scheduling_cscm98.dir
+/home/alfie/git-repos/scheduling-cscm98/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/alfie/git-repos/scheduling-cscm98/cmake-build-debug/CMakeFiles/rebuild_cache.dir
