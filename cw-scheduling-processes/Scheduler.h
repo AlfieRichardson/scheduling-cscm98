@@ -28,6 +28,7 @@ public:
 private:
     std::queue<Task*> taskQ;
     std::mutex lockQ;
+    int tasksDone;
 public:
 	void ScheduleTasksUntilEnd()  //In this function you will have to schedule all the tasks until completion of all of them.
     {
@@ -36,13 +37,14 @@ public:
             taskQ.push(&tasks[i]);
         }
 
+        tasksDone = 0;
 
-        while (!taskQ.empty())
+        while (tasksDone < NB_TASKS)
         {
             for (int i = 0; i < NB_PROCESSORS; i++)
             {
                 lockQ.lock();
-                if (taskQ.front()->IsReady() && !processors[i].IsBusy())
+                if (!taskQ.empty() && taskQ.front()->IsReady() && !processors[i].IsBusy())
                 {
                     if (processors[i].LaunchTask(*taskQ.front()))
                     {
@@ -68,6 +70,10 @@ public:
                 taskQ.push(&tasks[taskId]);
                 break;
             case TaskState::terminated:
+                tasksDone++;
+                break;
+            case TaskState::done:
+                tasksDone++;
                 break;
         }
         lockQ.unlock();
