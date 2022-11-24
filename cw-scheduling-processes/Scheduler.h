@@ -26,14 +26,14 @@ public:
 
 // own code from here
 private:
-    std::queue<Task> taskQ;
+    std::queue<Task*> taskQ;
     std::mutex lockQ;
 public:
 	void ScheduleTasksUntilEnd()  //In this function you will have to schedule all the tasks until completion of all of them.
     {
         for (int i = 0; i < NB_TASKS; i++)
         {
-            taskQ.push(tasks[i]);
+            taskQ.push(&tasks[i]);
         }
 
 
@@ -42,15 +42,12 @@ public:
             for (int i = 0; i < NB_PROCESSORS; i++)
             {
                 lockQ.lock();
-                if (taskQ.front().IsReady() && !processors[i].IsBusy())
+                if (taskQ.front()->IsReady() && !processors[i].IsBusy())
                 {
-                    processors[i].LaunchTask(taskQ.front());
-                    taskQ.pop();
-
-                    /*if (processors[i].LaunchTask(taskQ.front(), 500))
+                    if (processors[i].LaunchTask(*taskQ.front()))
                     {
                         taskQ.pop();
-                    }*/
+                    }
                 }
                 lockQ.unlock();
             }
@@ -65,10 +62,10 @@ public:
         switch (state)
         {
             case TaskState::ready:
-                taskQ.push(tasks[taskId]);
+                taskQ.push(&tasks[taskId]);
                 break;
             case TaskState::waitingIOCompletion:
-                taskQ.push(tasks[taskId]);
+                taskQ.push(&tasks[taskId]);
                 break;
             case TaskState::terminated:
                 break;
@@ -77,8 +74,8 @@ public:
 	};
 
 	//Complete these two functions. The functions should return your student id and your name.
-	int StudentID() { return 0; }
-	std::string StudentName() { return ""; }
+	int StudentID() { return 851009; }
+	std::string StudentName() { return "Alfie Richardson"; }
 };
 
 
